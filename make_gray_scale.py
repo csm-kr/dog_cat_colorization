@@ -14,7 +14,7 @@ def cvt_gray_scale(data_dir):
         data_path = os.path.join(data_dir, data_name_list[i])
         gray_img = cv2.imread(data_path, cv2.IMREAD_GRAYSCALE)
         print(data_path)
-        save_path = r'data/train'
+        save_path = r'data/test'
         if not os.path.exists(save_path):
             os.mkdir(save_path)
         save_name = "g_" + data_name_list[i]
@@ -28,5 +28,5 @@ def cvt_gray_scale(data_dir):
 
 
 if __name__ == "__main__":
-    data = r"C:\Users\csm81\Desktop\data\alexnet_dog_cat_img\train"
+    data = r"C:\Users\csm81\Desktop\data\alexnet_dog_cat_img\test"
     cvt_gray_scale(data)
