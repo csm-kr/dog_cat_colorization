@@ -3,10 +3,11 @@
 - - -
 method : deep learning
 - - -
-model : alex-net
+model : Alex-net 을 이용한 Auto-Encoder
+
+![ae](https://user-images.githubusercontent.com/18729104/45923771-f92f6f80-bf29-11e8-9142-7320ed0c8506.png)
 - - -
-dataset : 귀여운 강아지와 고양이의 이미지 link : [data]
-[data] : https://www.kaggle.com/tongpython/cat-and-dog
+dataset : 귀여운 강아지와 고양이의 이미지 link : https://www.kaggle.com/tongpython/cat-and-dog
 
 ![cat 1](https://user-images.githubusercontent.com/18729104/45923706-12cfb780-bf28-11e8-8642-139ba7b07038.jpg)
 ![g_cat 1](https://user-images.githubusercontent.com/18729104/45923723-88d41e80-bf28-11e8-8944-4450ebb0be21.jpg)
