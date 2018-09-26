@@ -1,62 +1,97 @@
-import cv2
-import os
 import numpy as np
 
 
-def read_data_set(datadir):
-    """
-    x_feature 과 y_feature 을 모두 읽어드리고, 내보내는 부분
-    :param datadir: 데이터셋이 있는 디렉토리
-    :return: x_features : nparray ( N, 227, 227, 1)
-              y_labels : nparray ( N, 227, 227, 3)
-    """
-    # 파일이름으로 읽기
-    # 파일이름이 cat 이고 뒤의 숫자로 배열한다.
-    # 파일 이름 리스트
-    data_list = os.listdir(datadir)
-    # 데이타 갯수
-    data_length = len(data_list)
+class DataSet(object):
+    def __init__(self, x_features, y_labels):
+        # num of data
+        self._num_of_data = x_features.shape[0]
+        # x features
+        self._x_features = x_features
+        # y features
+        self._y_labels = y_labels
+        # idx 들
+        self._indices = np.arange(self._num_of_data, dtype=np.uint8)
+        # 현재 idx
+        self._now_idx = 0
+        # 현재 epoch
+        self._now_epoch = 0
+        # 초기화
+        self.reset()
 
-    x_list = []
-    y_list = []
+    def reset(self):
+        """
+        몇몇의 변수를 재설정 하는 함수
+        :return: 없음
+        """
+        self._now_epoch = 0
+        self._now_idx = 0
 
-    # 이름 가져오는 부분
-    for i in range(data_length):
-        name = data_list[i].split('.')[0]
-        if name == 'g_cat':
-            x_list.append(data_list[i])
-        elif name == 'cat':
-            y_list.append(data_list[i])
+    # getter
+    @property
+    def num_of_data(self):
+        return self._num_of_data
 
-    # 정렬 하는 부분
+    @property
+    def x_features(self):
+        return self._x_features
 
-    x_list.sort()
-    y_list.sort()
+    @property
+    def y_labels(self):
+        return self._y_labels
 
-    cat_len = len(x_list)
-    print(cat_len)
+    def next_batch(self, batch_size, shuffle=True):
+        """
+        sgd 를 이용하여 학습하기 위해서 배치 사이즈를 정하고 그만큼 잘라서 데이터를 보내주는 부분
+        :param batch_size: 배치사이즈의 크기, int
+        :param shuffle: 섞느냐 안섞느냐의 여부, bool
+        :return: batch_x : ndarray (batch_size, 256, 256, 1)
+                  batch_y : ndarray (batch_size, 256, 256, 3)
+        """
+        start_idx = self._now_idx
 
-    x_features = np.empty(shape=(cat_len, 256, 256, 1), dtype=np.float32)
-    y_labels = np.empty(shape=(cat_len, 256, 256, 3), dtype=np.float32)
+        # 처음이라면 인덱스를 섞는다.
+        if self._now_idx == 0 and self._now_epoch == 0 and shuffle:
+            np.random.shuffle(self._indices)
 
-    for i in range(cat_len):
-        img_g = cv2.imread(os.path.join(data_dir, x_list[i]), cv2.IMREAD_GRAYSCALE)
-        img_g = cv2.resize(img_g, dsize=(256, 256), interpolation=cv2.INTER_CUBIC).astype(np.float32)
-        img_g = img_g[:, :, np.newaxis]
-        x_features[i] = img_g
-        img = cv2.imread(os.path.join(data_dir, y_list[i]))
-        img = cv2.resize(img, dsize=(256, 256), interpolation=cv2.INTER_CUBIC).astype(np.float32)
-        y_labels[i] = img
-        if np.mod(i, 1000) == 0:
-            print("Loading {}/{} images...".format(i, cat_len))
+        # 넘어가는 부분
+        if start_idx + batch_size > self._num_of_data:
 
-    print('\nDone')
-    print(x_features.shape)
-    print(y_labels.shape)
+            # epoch 증가
+            self._now_epoch += 1
+            rest_num = self._num_of_data - start_idx
+            rest_indices = self._indices[start_idx:self._num_of_data]
 
-    return x_features, y_labels
+            # 섞어주고
+            if shuffle:
+                np.random.shuffle(self._indices)
+
+            start_idx = 0
+            new_num = batch_size - rest_num
+            self._now_idx = new_num
+            new_indices = self._indices[start_idx:new_num]
+
+            rest_features = self.x_features[rest_indices]
+            rest_labels = self.y_labels[rest_indices]
+
+            new_features = self.x_features[new_indices]
+            new_labels = self.y_labels[new_indices]
+
+            batch_x = np.concatenate((rest_features, new_features), axis=0)
+            batch_y = np.concatenate((rest_labels, new_labels), axis=0)
+
+        else:
+
+            end_idx = start_idx + batch_size
+            self._now_idx = end_idx
+            batch_x = self.x_features[start_idx, end_idx]
+            batch_y = self._y_labels[start_idx, end_idx]
+
+        return batch_x, batch_y
 
 
-if __name__ == "__main__":
-    data_dir = r"data/train"
-    read_data_set(data_dir)
+
+
+
+
+
+
