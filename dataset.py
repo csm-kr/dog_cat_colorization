@@ -70,7 +70,6 @@ class DataSet(object):
             self._now_idx = new_num
             new_indices = self._indices[start_idx:new_num]
 
-
             rest_features = self.x_features[rest_indices]
             rest_labels = self.y_labels[rest_indices]
 
