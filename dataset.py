@@ -10,7 +10,7 @@ class DataSet(object):
         # y features
         self._y_labels = y_labels
         # idx 들
-        self._indices = np.arange(self._num_of_data, dtype=np.uint8)
+        self._indices = np.arange(self._num_of_data, dtype=np.uint16)
         # 현재 idx
         self._now_idx = 0
         # 현재 epoch
@@ -70,6 +70,7 @@ class DataSet(object):
             self._now_idx = new_num
             new_indices = self._indices[start_idx:new_num]
 
+
             rest_features = self.x_features[rest_indices]
             rest_labels = self.y_labels[rest_indices]
 
@@ -83,8 +84,11 @@ class DataSet(object):
 
             end_idx = start_idx + batch_size
             self._now_idx = end_idx
-            batch_x = self.x_features[start_idx, end_idx]
-            batch_y = self._y_labels[start_idx, end_idx]
+
+            print("end_idx : ", end_idx)
+
+            batch_x = self.x_features[start_idx:end_idx]
+            batch_y = self.y_labels[start_idx:end_idx]
 
         return batch_x, batch_y
 

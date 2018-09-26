@@ -4,7 +4,6 @@ import os
 import dataset as dt
 
 
-
 def read_color_data_set(datadir):
     """
     x_feature 과 y_feature 을 모두 읽어드리고, 내보내는 부분
@@ -63,6 +62,10 @@ if __name__ == "__main__":
     data_dir = r"data/train"
     x, y = read_color_data_set(data_dir)
     train_data = dt.DataSet(x, y)
-    batch_x, batch_y = train_data. next_batch(10)
-    print(batch_x.shape)
-    print(batch_y.shape)
+
+    for epoch in range(10):
+
+        batch_x, batch_y = train_data.next_batch(1000)
+        print("epoch : ", epoch)
+        print(batch_x.shape)
+        print(batch_y.shape)
