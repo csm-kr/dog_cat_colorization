@@ -10,7 +10,9 @@ model : Alex-net 을 이용한 Auto-Encoder
 dataset : 귀여운 강아지와 고양이의 이미지 link : https://www.kaggle.com/tongpython/cat-and-dog
 
 [변경] : 처음에는 고양이의 데이터만 가지고 실시 (6228 개의 이미지 pair)
-
+***
+loss : MSE (예정)
+***
 ![g_cat 1](https://user-images.githubusercontent.com/18729104/45923723-88d41e80-bf28-11e8-8944-4450ebb0be21.jpg)
 ![cat 1](https://user-images.githubusercontent.com/18729104/45923706-12cfb780-bf28-11e8-8642-139ba7b07038.jpg)
 - - -
