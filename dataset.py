@@ -84,7 +84,7 @@ class DataSet(object):
             end_idx = start_idx + batch_size
             self._now_idx = end_idx
 
-            print("end_idx : ", end_idx)
+            # print("end_idx : ", end_idx)
 
             batch_x = self.x_features[start_idx:end_idx]
             batch_y = self.y_labels[start_idx:end_idx]
