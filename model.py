@@ -35,8 +35,10 @@ class Model(object):
 
         with tf.variable_scope('conv1'):
             weight = tf.get_variable(name='weight', shape=[15, 15, 1, 32], dtype=tf.float32,
-                                     initializer=tf.truncated_normal_initializer(mean=0.0, stddev=1.0))
-            layer1 = tf.nn.conv2d(input=x_input, filter=weight, strides=[1, 1, 1, 1], padding='SAME')
+                                     initializer=tf.truncated_normal_initializer(mean=0.0, stddev=0.01))
+            bias = tf.get_variable(name='bias', shape=[32], dtype=tf.float32,
+                                   initializer=tf.constant_initializer(value=0.1))
+            layer1 = tf.nn.conv2d(input=x_input, filter=weight, strides=[1, 1, 1, 1], padding='SAME') + bias
             layer1 = tf.nn.relu(layer1)
             layer1 = tf.nn.max_pool(value=layer1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
             print("layer1's shape : ", layer1.shape)
@@ -45,8 +47,10 @@ class Model(object):
 
         with tf.variable_scope('conv2'):
             weight = tf.get_variable(name='weight', shape=[11, 11, 32, 64], dtype=tf.float32,
-                                     initializer=tf.truncated_normal_initializer(mean=0.0, stddev=1.0))
-            layer2 = tf.nn.conv2d(input=layer1, filter=weight, strides=[1, 1, 1, 1], padding='SAME')
+                                     initializer=tf.truncated_normal_initializer(mean=0.0, stddev=0.01))
+            bias = tf.get_variable(name='bias', shape=[64], dtype=tf.float32,
+                                   initializer=tf.constant_initializer(value=0.1))
+            layer2 = tf.nn.conv2d(input=layer1, filter=weight, strides=[1, 1, 1, 1], padding='SAME') + bias
             layer2 = tf.nn.relu(layer2)
             layer2 = tf.nn.max_pool(value=layer2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
             print("layer2's shape : ", layer2.shape)
@@ -55,8 +59,10 @@ class Model(object):
 
         with tf.variable_scope('conv3'):
             weight = tf.get_variable(name='weight', shape=[9, 9, 64, 128], dtype=tf.float32,
-                                     initializer=tf.truncated_normal_initializer(mean=0.0, stddev=1.0))
-            layer3 = tf.nn.conv2d(input=layer2, filter=weight, strides=[1, 1, 1, 1], padding='SAME')
+                                     initializer=tf.truncated_normal_initializer(mean=0.0, stddev=0.01))
+            bias = tf.get_variable(name='bias', shape=[128], dtype=tf.float32,
+                                   initializer=tf.constant_initializer(value=0.1))
+            layer3 = tf.nn.conv2d(input=layer2, filter=weight, strides=[1, 1, 1, 1], padding='SAME') + bias
             layer3 = tf.nn.relu(layer3)
             layer3 = tf.nn.max_pool(value=layer3, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
             print("layer3's shape : ", layer3.shape)
@@ -65,8 +71,10 @@ class Model(object):
 
         with tf.variable_scope('conv4'):
             weight = tf.get_variable(name='weight', shape=[3, 3, 128, 256], dtype=tf.float32,
-                                     initializer=tf.truncated_normal_initializer(mean=0.0, stddev=1.0))
-            layer4 = tf.nn.conv2d(input=layer3, filter=weight, strides=[1, 1, 1, 1], padding='SAME')
+                                     initializer=tf.truncated_normal_initializer(mean=0.0, stddev=0.01))
+            bias = tf.get_variable(name='bias', shape=[256], dtype=tf.float32,
+                                   initializer=tf.constant_initializer(value=0.1))
+            layer4 = tf.nn.conv2d(input=layer3, filter=weight, strides=[1, 1, 1, 1], padding='SAME') + bias
             layer4 = tf.nn.relu(layer4)
             layer4 = tf.nn.max_pool(value=layer4, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
             print("layer4's shape : ", layer4.shape)
@@ -75,8 +83,10 @@ class Model(object):
 
         with tf.variable_scope('conv5'):
             weight = tf.get_variable(name='weight', shape=[3, 3, 256, 512], dtype=tf.float32,
-                                     initializer=tf.truncated_normal_initializer(mean=0.0, stddev=1.0))
-            layer5 = tf.nn.conv2d(input=layer4, filter=weight, strides=[1, 1, 1, 1], padding='SAME')
+                                     initializer=tf.truncated_normal_initializer(mean=0.0, stddev=0.01))
+            bias = tf.get_variable(name='bias', shape=[512], dtype=tf.float32,
+                                   initializer=tf.constant_initializer(value=0.1))
+            layer5 = tf.nn.conv2d(input=layer4, filter=weight, strides=[1, 1, 1, 1], padding='SAME') + bias
             layer5 = tf.nn.relu(layer5)
             layer5 = tf.nn.max_pool(value=layer5, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
             print("layer5's shape : ", layer5.shape)
@@ -85,8 +95,10 @@ class Model(object):
 
         with tf.variable_scope('conv6'):
             weight = tf.get_variable(name='weight', shape=[3, 3, 512, 1024], dtype=tf.float32,
-                                     initializer=tf.truncated_normal_initializer(mean=0.0, stddev=1.0))
-            layer6 = tf.nn.conv2d(input=layer5, filter=weight, strides=[1, 1, 1, 1], padding='SAME')
+                                     initializer=tf.truncated_normal_initializer(mean=0.0, stddev=0.01))
+            bias = tf.get_variable(name='bias', shape=[1024], dtype=tf.float32,
+                                   initializer=tf.constant_initializer(value=0.1))
+            layer6 = tf.nn.conv2d(input=layer5, filter=weight, strides=[1, 1, 1, 1], padding='SAME') + bias
             layer6 = tf.nn.relu(layer6)
             layer6 = tf.nn.max_pool(value=layer6, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
             print("layer6's shape : ", layer6.shape)
@@ -100,12 +112,12 @@ class Model(object):
                                      initializer=tf.truncated_normal_initializer(mean=0.0, stddev=1.0))
 
             output_shape = layer6.get_shape().as_list()
-            output_shape[0] = 10
+            output_shape[0] = 1
             output_shape[1] *= 2
             output_shape[2] *= 2
             output_shape[3] = weight.get_shape().as_list()[2]
 
-            layer7 = tf.nn.conv2d_transpose(value=layer6, filter=weight, output_shape=[10, 8, 8, 512]
+            layer7 = tf.nn.conv2d_transpose(value=layer6, filter=weight, output_shape=[1, 8, 8, 512]
                                             , strides=[1, 2, 2, 1], padding='SAME')
             layer7 = tf.nn.relu(layer7)
             print("layer7's shape : ", layer7.shape)
@@ -116,7 +128,7 @@ class Model(object):
                                      initializer=tf.truncated_normal_initializer(mean=0.0, stddev=1.0))
 
             output_shape = layer7.get_shape().as_list()
-            output_shape[0] = 10
+            output_shape[0] = 1
             output_shape[1] *= 2
             output_shape[2] *= 2
             output_shape[3] = weight.get_shape().as_list()[2]
@@ -132,7 +144,7 @@ class Model(object):
                                      initializer=tf.truncated_normal_initializer(mean=0.0, stddev=1.0))
 
             output_shape = layer8.get_shape().as_list()
-            output_shape[0] = 10
+            output_shape[0] = 1
             output_shape[1] *= 2
             output_shape[2] *= 2
             output_shape[3] = weight.get_shape().as_list()[2]
@@ -148,7 +160,7 @@ class Model(object):
                                      initializer=tf.truncated_normal_initializer(mean=0.0, stddev=1.0))
 
             output_shape = layer9.get_shape().as_list()
-            output_shape[0] = 10
+            output_shape[0] = 1
             output_shape[1] *= 2
             output_shape[2] *= 2
             output_shape[3] = weight.get_shape().as_list()[2]
@@ -164,7 +176,7 @@ class Model(object):
                                      initializer=tf.truncated_normal_initializer(mean=0.0, stddev=1.0))
 
             output_shape = layer10.get_shape().as_list()
-            output_shape[0] = 10
+            output_shape[0] = 1
             output_shape[1] *= 2
             output_shape[2] *= 2
             output_shape[3] = weight.get_shape().as_list()[2]
@@ -180,7 +192,7 @@ class Model(object):
                                      initializer=tf.truncated_normal_initializer(mean=0.0, stddev=1.0))
 
             output_shape = layer11.get_shape().as_list()
-            output_shape[0] = 10
+            output_shape[0] = 1
             output_shape[1] = 256
             output_shape[2] = 256
             output_shape[3] = weight.get_shape().as_list()[2]
@@ -189,7 +201,7 @@ class Model(object):
                                              , strides=[1, 2, 2, 1], padding='SAME')
             layer12 = tf.nn.relu(layer12)
             logits = layer12
-            print("logits's shape : ", logits.shape)
+
             d['logits'] = logits
             print("layer12's shape : ", layer12.shape)
             # DeConv -> (?, 256, 256, 3)
@@ -200,7 +212,9 @@ class Model(object):
     def _build_loss(self):
 
         loss = tf.reduce_mean(tf.square(self.logits - self.y))
-        # loss = tf.add(loss, 0.001 * tf.reduce_sum(tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES)))
+        print("정답은 : ", self.y)
+
+        loss = loss / (256 * 256)
         """
         로스 함수를 리턴하는 함수 loss 는 mean square error
         :return: loss
@@ -217,8 +231,7 @@ if __name__ == "__main__":
     m = Model(input_shape=[256, 256, 1], output_shape=[256, 256, 3])
 
     optimizer = tf.train.AdamOptimizer(learning_rate=0.01).minimize(m.loss)
-
-    batch_size = 10
+    batch_size = 1
 
     # train
     with tf.Session() as sess:
@@ -237,9 +250,9 @@ if __name__ == "__main__":
 
                 batch_x, batch_y = train_data.next_batch(batch_size)
                 # print(batch_x.shape, batch_y.shape)
-                _, loss = sess.run(fetches=[optimizer, m.loss], feed_dict={m.x: batch_x, m.y: batch_y})
+                _, loss = sess.run([optimizer, m.loss], feed_dict={m.x: batch_x, m.y: batch_y})
                 print("iterator : ", i, ", loss : ", loss)
-
+                print("batch_y = ", batch_y)
                 avg_cost += loss
 
             print("epoch : ", epoch, ", loss : ", avg_cost/iterator)
