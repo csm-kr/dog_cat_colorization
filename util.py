@@ -15,6 +15,8 @@ def read_color_data_set(datadir):
     # 파일이름이 cat 이고 뒤의 숫자로 배열한다.
     # 파일 이름 리스트
     data_list = os.listdir(datadir)
+
+
     # 데이타 갯수
     data_length = len(data_list)
 
@@ -29,6 +31,7 @@ def read_color_data_set(datadir):
         elif name == 'cat':
             y_list.append(data_list[i])
 
+    print(x_list)
     # 정렬 하는 부분
 
     x_list.sort()
@@ -55,7 +58,7 @@ def read_color_data_set(datadir):
     print(x_features.shape)
     print(y_labels.shape)
 
-    return x_features, y_labels
+    return x_features, y_labels, x_list
 
 
 if __name__ == "__main__":
