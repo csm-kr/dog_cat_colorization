@@ -280,8 +280,12 @@ if __name__ == "__main__":
     x, y, _ = util.read_color_data_set(data)
     train_data = dt.DataSet(x, y)
     print(train_data)
+
+    # hyper parameter
     batch_size = 10
-    m = Model(input_shape=[256, 256, 1], output_shape=[256, 256, 3], batch_size=batch_size)
+    total_epoch = 100
+
+    m = Model(input_shape=[256, 256, 1], output_shape=[256, 256, 3], batch_s=batch_size)
     optimizer = tf.train.AdamOptimizer(learning_rate=0.01).minimize(m.loss)
 
     # train
@@ -299,7 +303,7 @@ if __name__ == "__main__":
         print('Learning started. It takes sometime.')
         iterator = train_data.num_of_data // batch_size
         print("iterator : ", iterator)
-        for epoch in range(10):
+        for epoch in range(total_epoch):
             avg_cost = 0
             for i in range(iterator):
 

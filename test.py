@@ -53,7 +53,9 @@ _y_prediction = np.concatenate(_y_prediction, axis=0)  # (101, num_classes)
 plt.figure()
 
 img = np.squeeze(img)
-# cv2.imshow("input", img[0])
+cv2.imshow("input", _y_prediction[0])
+
+print( _y_prediction[0])
 
 for i in range(10):
 
