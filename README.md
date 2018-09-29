@@ -26,5 +26,8 @@ loss : MSE (예정)
 ***
 2018.09.28 - Model 부분 구성(2) decoder -- pooling 을 없애니까 잘 됨
 ***
+2018.09.29 - Model 을 변경하여 평가 ( 중간에 concatenate 해봄)
+***
 result 01
+
 ![result1](https://user-images.githubusercontent.com/18729104/46208199-ee7b3d00-c364-11e8-8d40-7d2e3261aede.JPG)
