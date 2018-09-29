@@ -3,9 +3,12 @@
 - - -
 method : deep learning
 - - -
-model : Alex-net 을 이용한 Auto-Encoder
+model : Alex-net 을 이용한 Auto-Encoder : 모델 변경 eccv 2016 colorful image colorization
 
 ![ae](https://user-images.githubusercontent.com/18729104/45923771-f92f6f80-bf29-11e8-9142-7320ed0c8506.png)
+
+![model](https://user-images.githubusercontent.com/18729104/46243967-5f2d6280-c414-11e8-939e-82abad264b24.jpg)
+
 - - -
 dataset : 귀여운 강아지와 고양이의 이미지 link : https://www.kaggle.com/tongpython/cat-and-dog
 
@@ -26,8 +29,12 @@ loss : MSE (예정)
 ***
 2018.09.28 - Model 부분 구성(2) decoder -- pooling 을 없애니까 잘 됨
 ***
-2018.09.29 - Model 을 변경하여 평가 ( 중간에 concatenate 해봄)
+2018.09.29 - Model 을 변경하여 평가 ( 중간에 concatenate 해봄) Richard Zhang, colorful image colorization,  eccv 2016
 ***
 result 01
 
 ![result1](https://user-images.githubusercontent.com/18729104/46208199-ee7b3d00-c364-11e8-8d40-7d2e3261aede.JPG)
+
+result 02
+
+![result2](https://user-images.githubusercontent.com/18729104/46243968-62c0e980-c414-11e8-9d89-1513564e960a.png)

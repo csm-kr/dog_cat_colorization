@@ -12,7 +12,7 @@ config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 
 sess = tf.Session(graph=graph, config=config)
-model = model.Model([256, 256, 1], [256, 256, 3])
+model = model.Model([256, 256, 1], [256, 256, 3], batch_s=10)
 saver = tf.train.Saver()
 saver.restore(sess, './save/color.ckpt')  # restore learned weights
 

@@ -15,8 +15,6 @@ def read_color_data_set(datadir):
     # 파일이름이 cat 이고 뒤의 숫자로 배열한다.
     # 파일 이름 리스트
     data_list = os.listdir(datadir)
-
-
     # 데이타 갯수
     data_length = len(data_list)
 
