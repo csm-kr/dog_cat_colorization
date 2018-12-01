@@ -28,5 +28,10 @@ def cvt_gray_scale(data_dir):
 
 
 if __name__ == "__main__":
-    data = r"C:\Users\csm81\Desktop\data\alexnet_dog_cat_img\test"
-    cvt_gray_scale(data)
+    # data = r"C:\Users\csm81\Desktop\data\alexnet_dog_cat_img\test"
+    # cvt_gray_scale(data)
+    gray_img = cv2.imread(r"C:\Users\csm81\Desktop\img.jpg", cv2.IMREAD_GRAYSCALE)
+    # cv2.imwrite(r"C:\Users\csm81\Desktop\img_gray", gray_img)
+    cv2.imshow("gray", gray_img)
+
+    cv2.waitKey(0)

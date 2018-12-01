@@ -42,13 +42,21 @@ def read_color_data_set(datadir):
     y_labels = np.empty(shape=(cat_len, 256, 256, 3), dtype=np.float32)
 
     for i in range(cat_len):
-        img_g = cv2.imread(os.path.join(datadir, x_list[i]), cv2.IMREAD_GRAYSCALE)
+        img_g = cv2.imread(os.path.join(datadir, y_list[i]), cv2.IMREAD_GRAYSCALE)
         img_g = cv2.resize(img_g, dsize=(256, 256), interpolation=cv2.INTER_CUBIC)
         img_g = img_g[:, :, np.newaxis]
+        # cv2.imshow("gray", img_g)
         x_features[i] = img_g
-        img = cv2.imread(os.path.join(datadir, y_list[i]))
-        img = cv2.resize(img, dsize=(256, 256), interpolation=cv2.INTER_CUBIC).astype(np.float32)
+        img = cv2.imread(os.path.join(datadir, x_list[i]))
+        img = cv2.resize(img, dsize=(256, 256), interpolation=cv2.INTER_CUBIC)
+        img = cv2.cvtColor(src=img,
+                           code=cv2.COLOR_RGB2Lab)
         y_labels[i] = img
+
+        # l = img[:, :, 0]
+        # cv2.imshow("l_", l)
+        # cv2.imshow("lab_color", img)
+        # cv2.waitKey(0)
         if np.mod(i, 1000) == 0:
             print("Loading {}/{} images...".format(i, cat_len))
 

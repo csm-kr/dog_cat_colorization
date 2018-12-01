@@ -16,15 +16,6 @@ class DataSet(object):
         # 현재 epoch
         self._now_epoch = 0
         # 초기화
-        self.reset()
-
-    def reset(self):
-        """
-        몇몇의 변수를 재설정 하는 함수
-        :return: 없음
-        """
-        self._now_epoch = 0
-        self._now_idx = 0
 
     # getter
     @property

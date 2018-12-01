@@ -12,7 +12,7 @@ config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 
 sess = tf.Session(graph=graph, config=config)
-model = model.Model([256, 256, 1], [256, 256, 3], batch_s=10)
+model = model.Model([256, 256, 1], [256, 256, 3], batch_s=20)
 saver = tf.train.Saver()
 saver.restore(sess, './save/color.ckpt')  # restore learned weights
 
@@ -32,7 +32,7 @@ for i in range(10):
     temp = temp[:, :, np.newaxis]
     img.append(temp)
 
-batch_size = 10
+batch_size = 20
 prediction_size = test_data.num_of_data
 iterator = prediction_size // batch_size
 _y_prediction = []
@@ -45,17 +45,14 @@ for i in range(1):
         _batch_size = batch_size
 
     x, _ = test_data.next_batch(_batch_size)
-    y_prediction = sess.run(model.logits, feed_dict={model.x: img})
+    y_prediction = sess.run(model.logits, feed_dict={model.x: img, model.is_train: False})
+    print(y_prediction.shape)
     _y_prediction.append(y_prediction)
-
 _y_prediction = np.concatenate(_y_prediction, axis=0)  # (101, num_classes)
+print(_y_prediction.shape)
 
 plt.figure()
-
 img = np.squeeze(img)
-cv2.imshow("input", _y_prediction[0])
-
-print( _y_prediction[0])
 
 for i in range(10):
 
@@ -68,7 +65,8 @@ for i in range(10):
     plt.subplot(4, 5, i + 11)
     plt.xticks([])
     plt.yticks([])
-    plt.imshow(_y_prediction[i].astype(np.int32))
+    plt.imshow(cv2.cvtColor(src=_y_prediction[i],
+                            code=cv2.COLOR_Lab2RGB))
 
 plt.show()
 # 점수 내는 부분
