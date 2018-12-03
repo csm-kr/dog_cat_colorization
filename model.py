@@ -123,10 +123,8 @@ class Model(object):
             layer = tf.layers.batch_normalization(inputs=layer, training=self.is_train)
             layer = tf.nn.relu(layer)
             print("before concat layer {} : ".format(cnt), layer.shape)
-
             layer = tf.concat([x_input, layer], axis=-1)
             print("layer {} : ".format(cnt), layer.shape)
-            cnt += 1
             d['logits'] = layer
             logits = d['logits']
             d['pred'] = layer
@@ -137,8 +135,8 @@ class Model(object):
 
         print("logits'shape : ", self.logits.shape)
         print("y'shape : ", self.y.shape)
-        # loss = tf.reduce_mean(tf.square(self.logits - self.y))
-        loss = tf.losses.mean_squared_error(labels=self.y, predictions=self.logits)
+        loss = tf.reduce_mean(tf.square(self.logits - self.y))
+        loss = tf.reduce_mean(tf.nn.l2_loss(self.logits - self.y))
         print("loss'shape : ", loss)
         return loss
 
@@ -146,13 +144,13 @@ class Model(object):
 if __name__ == "__main__":
 
     data = r"./data/train"
-    x, y, _ = util.read_color_data_set(data)
+    x, y = util.read_color_data_set(data)
     train_data = dt.DataSet(x, y)
     print(train_data)
 
     # hyper parameter
-    batch_size = 20
-    total_epoch = 100
+    batch_size = 10
+    total_epoch = 50
 
     m = Model(input_shape=[256, 256, 1], output_shape=[256, 256, 3], batch_s=batch_size)
 
@@ -160,8 +158,8 @@ if __name__ == "__main__":
     update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
     update_vars = tf.trainable_variables()
     with tf.control_dependencies(update_ops):
-        optimizer = tf.train.AdamOptimizer(0.01, momentum).minimize(m.loss,
-                                                                    var_list=update_vars)
+        optimizer = tf.train.AdamOptimizer(0.0001, momentum).minimize(m.loss,
+                                                                      var_list=update_vars)
 
     # train
     graph = tf.get_default_graph()
@@ -169,7 +167,7 @@ if __name__ == "__main__":
     config.gpu_options.allow_growth = True
     with tf.Session(graph=graph, config=config) as sess:
 
-        save_dir = './save'
+        save_dir = './save/exp_07'
         if not os.path.exists(save_dir):
             os.mkdir(save_dir)
         saver = tf.train.Saver()
@@ -180,12 +178,8 @@ if __name__ == "__main__":
         for epoch in range(total_epoch):
             avg_cost = 0
             for i in range(iterator):
-
                 batch_x, batch_y = train_data.next_batch(batch_size)
-                print(batch_x.shape, batch_y.shape)
-
                 _, loss = sess.run([optimizer, m.loss], feed_dict={m.x: batch_x, m.y: batch_y, m.is_train: True})
-
                 print("step : ", i, " loss : ", loss)
                 avg_cost += loss
 

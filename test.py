@@ -1,11 +1,12 @@
 import tensorflow as tf
 import model
-import matplotlib.pyplot as plt
 import cv2
 import dataset as dt
 import util
 import numpy as np
 import os
+from skimage import color
+
 
 graph = tf.get_default_graph()
 config = tf.ConfigProto()
@@ -14,7 +15,7 @@ config.gpu_options.allow_growth = True
 sess = tf.Session(graph=graph, config=config)
 model = model.Model([256, 256, 1], [256, 256, 3], batch_s=20)
 saver = tf.train.Saver()
-saver.restore(sess, './save/color.ckpt')  # restore learned weights
+saver.restore(sess, './save/exp_03/color.ckpt')  # restore learned weights
 
 print('test started.')
 
@@ -32,7 +33,7 @@ for i in range(10):
     temp = temp[:, :, np.newaxis]
     img.append(temp)
 
-batch_size = 20
+batch_size = 10
 prediction_size = test_data.num_of_data
 iterator = prediction_size // batch_size
 _y_prediction = []
@@ -46,30 +47,17 @@ for i in range(1):
 
     x, _ = test_data.next_batch(_batch_size)
     y_prediction = sess.run(model.logits, feed_dict={model.x: img, model.is_train: False})
-    print(y_prediction.shape)
+
     _y_prediction.append(y_prediction)
 _y_prediction = np.concatenate(_y_prediction, axis=0)  # (101, num_classes)
-print(_y_prediction.shape)
 
-plt.figure()
-img = np.squeeze(img)
 
-for i in range(10):
+for num in range(10):
+    color = color.lab2rgb(_y_prediction[num])
+    print(_y_prediction[num])
+    cv2.imshow("output", color)
+    cv2.waitKey(0)
 
-    plt.subplot(4, 5, i + 1)
-    plt.xticks([])
-    plt.yticks([])
-    plt.imshow(img[i], cmap='gray')
-    # plt.imshow(_y_prediction[i].astype(np.int32))
-
-    plt.subplot(4, 5, i + 11)
-    plt.xticks([])
-    plt.yticks([])
-    plt.imshow(cv2.cvtColor(src=_y_prediction[i],
-                            code=cv2.COLOR_Lab2RGB))
-
-plt.show()
-# 점수 내는 부분
 
 
 

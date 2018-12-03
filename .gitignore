@@ -3,3 +3,27 @@
 /data
 __pycache__/
 /save
+
+# data
+data/
+
+# train
+save/
+logs/
+
+# pycharm IDE
+__pycache__/
+*.py[cod]
+*$py.class
+
+.idea/workspace.xml
+.idea/tasks/xml
+.idea/
+
+*.pyc
+*.pyo
+
+# ref
+yolo_v1.py
+old_versions/
+some_tests/
