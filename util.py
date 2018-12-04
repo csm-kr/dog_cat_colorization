@@ -21,11 +21,12 @@ def read_color_data_set(datadir):
 
     name_list = []
 
-    # 이름 가져오는 부분
-    for i in range(data_length):
-        name = data_list[i].split('.')[0]
-        if name == 'cat':
-            name_list.append(data_list[i])
+    name_list = data_list
+    # # 이름 가져오는 부분
+    # for i in range(data_length):
+    #     # name = data_list[i].split('.')[0]
+    #     # if name == 'cat':
+    #     #     name_list.append(data_list[i])
 
     print(name_list)
     # 정렬 하는 부분
@@ -63,7 +64,7 @@ def read_color_data_set(datadir):
     print(x_data.shape)
     print(y_data.shape)
 
-    return x_data, y_data
+    return x_data, y_data, name_list
 
 
 if __name__ == "__main__":
