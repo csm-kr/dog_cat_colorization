@@ -160,15 +160,15 @@ if __name__ == "__main__":
             avg_cost = 0
             for i in range(iterator):
                 batch_x, batch_y = train_data.next_batch(batch_size)
-                _, loss, summary = sess.run([optimizer, m.loss, summary], feed_dict={m.x: batch_x, m.y: batch_y,
-                                                                   m.is_train: True,
-                                                                   lr_ph: cur_lr})
+                _, loss, sum = sess.run([optimizer, m.loss, summary], feed_dict={m.x: batch_x, m.y: batch_y,
+                                                                                 m.is_train: True,
+                                                                                 lr_ph: cur_lr})
                 if epoch != 0 and epoch % 250 == 0 and i == 0:
                     cur_lr *= 0.1
                     # decay per 20 epochs
 
                 avg_cost += loss
-                writer.add_summary(summary, global_step=i + iterator * epoch)
+                writer.add_summary(sum, global_step=i + iterator * epoch)
 
             print("epoch : ", epoch, ", loss : ", avg_cost/iterator, ", lr : ", cur_lr)
             # 현재 모델의 파라미터들을 저장함
