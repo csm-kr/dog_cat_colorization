@@ -2,7 +2,8 @@
 
 The goal of this project is to convert original gray scale dog or cat images to 
 colorful vivid images.
-And it is a kinds of tutorial of a python example.
+
+And it is an good example supervised learning and tutorial.
 
 ## contents
 
@@ -23,7 +24,9 @@ And it is a kinds of tutorial of a python example.
 ### train
 
 - epoch : 
+
 - learning rate : 
+
 - 
 
 ### test
