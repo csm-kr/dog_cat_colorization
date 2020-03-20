@@ -1,93 +1,87 @@
-import tensorflow as tf
-import model
-import cv2
-import dataset as dt
-import util
-import numpy as np
-import os
+import torch
+import torchvision.transforms as transforms
+import torch.utils.data as data
+import loader
+import net as network
 from skimage import color
+import numpy as np
+import cv2
 
 
-graph = tf.get_default_graph()
-config = tf.ConfigProto()
-config.gpu_options.allow_growth = True
+def test(opts, show=True):
+    # Device configuration
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-sess = tf.Session(graph=graph, config=config)
-model = model.Model([256, 256, 1], [256, 256, 3], batch_s=20)
-saver = tf.train.Saver()
-saver.restore(sess, './save/exp_04/color.ckpt')  # restore learned weights
+    # transform 설정하기
+    transform = transforms.Compose(
+        [transforms.Resize(size=(224, 224)),
+         ])
 
-print('test started.')
+    # test set
+    test_set = loader.ColorLoader(root=opts.test_path, transform=transform)
+    # 복원된 사진을 보여줘야 하기 때문에 batch size 는 1
+    test_loader = data.DataLoader(test_set, batch_size=1, shuffle=False, num_workers=0)
 
-test_data_dir = r"./data/test_01"
-test_x, test_y, x_list = util.read_color_data_set(test_data_dir)
-test_data = dt.DataSet(test_x, test_y)
-print(x_list)
+    # model 정의
+    net = network.Net()
+    # net = net.Net().to(device)
+    net.load_state_dict(torch.load('./saves/color200.ckpt'))
+    net.eval()  # eval mode (batchnorm uses moving mean/variance instead of mini-batch mean/variance)
 
-img = []
-for i in range(10):
-    temp = cv2.imread(os.path.join(test_data_dir, x_list[i]), 0)
-    temp = cv2.resize(temp, dsize=(256, 256), interpolation=cv2.INTER_CUBIC)
-    temp = temp[:, :, np.newaxis]
-    img.append(temp)
+    # test 할 때 back propagation 이 필요 없기 때문에, with torch.no_grad(): 로 래핑을 하면, 그라디언트를 안 쓴다.
+    with torch.no_grad():
 
-batch_size = 10
-prediction_size = test_data.num_of_data
-iterator = prediction_size // batch_size
-_y_prediction = []
+        for images, colored_img in test_loader:
+            # (1, 1, 224, 224)
+            # images = images.to(device)
+            # (1, 2, 224, 224)
+            outputs = net(images)
 
-for i in range(1):
+            # tensor 를 numpy 로 변경
+            images = images.numpy()
+            outputs = outputs.numpy()
+            colored_img = colored_img.numpy()
 
-    if i == iterator:
-        _batch_size = prediction_size - iterator * batch_size
-    else:
-        _batch_size = batch_size
+            # 맨처음 batch
+            images = np.squeeze(images, axis=0)
+            outputs = np.squeeze(outputs, axis=0)
+            colored_img = np.squeeze(colored_img, axis=0)
+            # print(images.shape)
+            # print(outputs.shape)
 
-    x, y = test_data.next_batch(_batch_size)
-    y_prediction = sess.run(model.logits, feed_dict={model.x: img, model.is_train: False})
+            # (c, w, h) --> (w, h, c) 로 변경 (이미지 출력하기 위해서)
+            images = images.transpose((1, 2, 0))
+            outputs = outputs.transpose((1, 2, 0))
+            colored_img = colored_img.transpose((1, 2, 0))
 
-    _y_prediction.append(y_prediction)
-_y_prediction = np.concatenate(_y_prediction, axis=0)  # (101, num_classes)
+            # 3 channel 의 lab 이미지로 변환
+            color_img = np.concatenate((images, outputs), axis=-1)
+            # lab2rgb 는 0 ~ 1 사이로 나오는 것 같음. (--> 값 확인 해 보자.)
+            origin_img = np.concatenate((images, colored_img), axis=-1)
 
+            color_img = color.lab2rgb(color_img)
+            origin_img = color.lab2rgb(origin_img)
 
-for num in range(batch_size):
+            # cv2로 출력하기 위해서 format 맞춰주는 부분
+            images = np.array(images).astype(np.uint8)
 
-    l = _y_prediction[num][:, :, 0][:, :, np.newaxis]
-    lab = _y_prediction[num].astype(np.float64)
+            color_img *= 255
+            color_img = color_img[:, :, ::-1]
+            color_img = np.array(color_img).astype(np.uint8)
 
-    # luminance to gray
-    zero = np.zeros_like(l)
-    l = np.concatenate([l, zero, zero], axis=-1)
-    l = l.astype(np.float64)
+            origin_img *= 255
+            origin_img = origin_img[:, :, ::-1]
+            origin_img = np.array(origin_img).astype(np.uint8)
 
-    gray = (np.clip(color.lab2rgb(l), 0, 1) * 255).astype('uint8')
-    # rgb to lab
-    col = (np.clip(color.lab2rgb(lab), 0, 1) * 255).astype('uint8')
+            # resize
+            images = cv2.resize(images, (448, 448))
+            color_img = cv2.resize(color_img, (448, 448))
+            origin_img = cv2.resize(origin_img, (448, 448))
 
-    lab_img = y[num].astype(np.float64)
-    lab_img = color.lab2rgb(lab_img)
-    lab_img = (np.clip(lab_img, 0, 1) * 255).astype('uint8')
-
-    kernel = np.ones((3, 3), np.uint8)
-    dilation_image = cv2.dilate(lab_img, kernel, iterations=1)  #// make dilation image
-    ref = lab_img - dilation_image
-    for i in range(256):
-        for j in range(256):
-            for c in range(3):
-                if ref[i][j][c] > 200 or ref[i][j][c] < 100:
-                    ref[i][j][c] = 255
-
-    cv2.imshow("L {}".format(num + 1), gray)
-    cv2.imshow("output {}".format(num + 1), col)
-    #
-    # cv2.imshow("original {}".format(num + 1), lab_img)
-
-    # print(col)
-    cv2.waitKey(0)
-
-
-
-
+            cv2.imshow('gray_img', images)
+            cv2.imshow('color_img', color_img)
+            cv2.imshow('origin_img', origin_img)
+            cv2.waitKey(0)
 
 
 
