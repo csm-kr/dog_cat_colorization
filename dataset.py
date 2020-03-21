@@ -6,6 +6,10 @@ from skimage import color
 # pip install scikit-image
 import numpy as np
 import torch
+import cv2
+
+
+visualization = True
 
 
 class ColorDataset(Dataset):
@@ -13,13 +17,16 @@ class ColorDataset(Dataset):
         """
         create dog cat color dataset
         :param root: str, root path that contains test1 and train folder
-        :param subset: str, goal of dataset
+        :param subset: str, goal of dataset, 'train' or 'test'
         """
         super().__init__()
 
-        # subset 이 str 이 아니면 오류
-        if len(subset) != 5:
+        # subset must be 'train' or 'test'
+        if subset != 'train' and subset != 'test':
+            raise Exception('Wrong input, subset must be train or test')
+        if len(subset) == 4:
             subset += '1'
+
         self.image_path = os.path.join(root, subset)
         self.image_name = glob.glob(os.path.join(self.image_path, '*.jpg'))
 
@@ -28,13 +35,24 @@ class ColorDataset(Dataset):
         image = Image.open(self.image_name[idx])
 
         # rgb to lab
-        img_lab = color.rgb2lab(image)
+        # L lies between 0 and 100, and a and b lie between -110 and 110.
+
+        img_lab = color.rgb2lab(image)   # type --> uint8 to float64
         img_l = img_lab[:, :, 0]         # h, w
         img_l = img_l[:, :, np.newaxis]  # h, w, 1
         img_ab = img_lab[:, :, 1:]       # h, w, 2
 
-        img_l = img_l.transpose((2, 0, 1))
-        img_ab = img_ab.transpose((2, 0, 1))
+        # visualization
+        if visualization:
+
+            # lab to rgb
+            color_img = np.concatenate((img_l, img_ab), axis=-1)
+            color_img = color.lab2rgb(color_img)  # rgb
+            cv2.imshow('color', color_img[..., ::-1])
+            cv2.waitKey(0)
+
+        img_l = img_l.transpose((2, 0, 1))    # 1, h, w
+        img_ab = img_ab.transpose((2, 0, 1))  # 2, h, w
 
         # .type(torch.FloatTensor) 을 해주지 않으면 torch.DoubleTensor 라서 오류가 납니다. :)
         img_l = torch.from_numpy(img_l).type(torch.FloatTensor)
@@ -48,7 +66,7 @@ class ColorDataset(Dataset):
 
 # test code
 if __name__ == "__main__":
-    train_dataset = ColorDataset(root='D:\Data\dogs-vs-cats', subset='train')
+    train_dataset = ColorDataset(root='D:\Data\dogs-vs-cats', subset='test')
 
     for i in train_dataset:
         print(i)
