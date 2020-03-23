@@ -10,9 +10,66 @@ def weights_init(model):
         nn.init.constant_(model.bias.data, 0.1)
 
 
-class Net(nn.Module):
+class UNet(nn.Module):
     def __init__(self):
-        super(Net, self).__init__()
+        super(UNet, self).__init__()
+
+        # encoder
+        self.x1 = nn.Sequential(nn.Conv2d(1, 64, 3, padding=1),
+                                nn.BatchNorm2d(64),
+                                nn.ReLU(inplace=True),
+                                nn.Conv2d(64, 64, 3, padding=1),
+                                nn.BatchNorm2d(64),
+                                nn.ReLU(inplace=True),
+                                )
+
+        self.x2 = nn.Sequential(nn.MaxPool2d(2),
+                                nn.Conv2d(64, 128, 3, padding=1),
+                                nn.BatchNorm2d(128),
+                                nn.ReLU(inplace=True),
+                                nn.Conv2d(128, 128, 3, padding=1),
+                                nn.BatchNorm2d(128),
+                                nn.ReLU(inplace=True),
+                                )
+
+        self.x3 = nn.Sequential(nn.MaxPool2d(2),
+                                nn.Conv2d(128, 256, 3, padding=1),
+                                nn.BatchNorm2d(256),
+                                nn.ReLU(inplace=True),
+                                nn.Conv2d(256, 256, 3, padding=1),
+                                nn.BatchNorm2d(256),
+                                nn.ReLU(inplace=True),
+                                )
+
+        self.x4 = nn.Sequential(nn.MaxPool2d(2),
+                                nn.Conv2d(256, 512, 3, padding=1),
+                                nn.BatchNorm2d(512),
+                                nn.ReLU(inplace=True),
+                                nn.Conv2d(512, 512, 3, padding=1),
+                                nn.BatchNorm2d(512),
+                                nn.ReLU(inplace=True),
+                                )
+
+        self.x5 = nn.Sequential(nn.MaxPool2d(2),
+                                nn.Conv2d(512, 1024, 3, padding=1),
+                                nn.BatchNorm2d(1024),
+                                nn.ReLU(inplace=True),
+                                nn.Conv2d(1024, 1024, 3, padding=1),
+                                nn.BatchNorm2d(1024),
+                                nn.ReLU(inplace=True),
+                                )
+
+        self.up1 = nn.ConvTranspose2d(1024, 512, kernel_size=3, stride=2, padding=1, output_padding=1)
+        self.up1_conv = nn.Sequential(nn.Conv2d(512, 1024, 3, padding=1),
+
+                             nn.BatchNorm2d(1024),
+                                nn.ReLU(inplace=True),
+                                nn.Conv2d(1024, 1024, 3, padding=1),
+                                nn.BatchNorm2d(1024),
+                                nn.ReLU(inplace=True),)
+
+
+
         self.encoder = nn.Sequential(OrderedDict(
             [
             ('conv1', nn.Sequential(nn.Conv2d(1, 64, 3, 2, 1),
@@ -71,21 +128,25 @@ class Net(nn.Module):
         self.apply(weights_init)
 
     def forward(self, x):
-        x = self.encoder(x)
-        x = self.decoder(x)
+        x1 = self.x1(x)
+        x2 = self.x2(x1)
+        x3 = self.x3(x2)
+        x4 = self.x4(x3)
+        x5 = self.x5(x4)
+        up1 = self.up1(x5)
 
         # for name, module in self.decoder.named_children():
         #     print("name :", name)
         #     print("module :", module)
         # print(x.size())
 
-        return x
+        return up1
 
 
 if __name__ == "__main__":
-    x = torch.rand([10, 1, 224, 224]).cuda()
-    net = Net().cuda()
-    net.forward(x)
+    x = torch.rand([10, 1, 512, 512]).cuda()
+    net = UNet().cuda()
+    print(net.forward(x).size())  # x5 is 32, 32
 
 
 
