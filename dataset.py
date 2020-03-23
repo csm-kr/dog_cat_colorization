@@ -7,13 +7,14 @@ from skimage import color
 import numpy as np
 import torch
 import cv2
+import torchvision
 
 
 visualization = True
 
 
 class ColorDataset(Dataset):
-    def __init__(self, root, subset='train'):
+    def __init__(self, root, subset='train', transform=None):
         """
         create dog cat color dataset
         :param root: str, root path that contains test1 and train folder
@@ -29,10 +30,14 @@ class ColorDataset(Dataset):
 
         self.image_path = os.path.join(root, subset)
         self.image_name = glob.glob(os.path.join(self.image_path, '*.jpg'))
+        self.transform = transform
 
     def __getitem__(self, idx):
         # image load
         image = Image.open(self.image_name[idx])
+
+        if transform is not None:
+            image = self.transform(image)
 
         # rgb to lab
         # L lies between 0 and 100, and a and b lie between -110 and 110.
@@ -66,7 +71,12 @@ class ColorDataset(Dataset):
 
 # test code
 if __name__ == "__main__":
-    train_dataset = ColorDataset(root='D:\Data\dogs-vs-cats', subset='test')
+
+    transform = torchvision.transforms.Compose([
+        torchvision.transforms.Resize((300, 300))
+    ])
+
+    train_dataset = ColorDataset(root='D:\Data\dogs-vs-cats', subset='test', transform=transform)
 
     for i in train_dataset:
         print(i)
