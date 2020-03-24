@@ -14,7 +14,7 @@ visualization = True
 
 
 class ColorDataset(Dataset):
-    def __init__(self, root, subset='train', transform=None):
+    def __init__(self, root='D:\Data\dogs-vs-cats', subset='train', transform=None):
         """
         create dog cat color dataset
         :param root: str, root path that contains test1 and train folder
@@ -73,7 +73,7 @@ class ColorDataset(Dataset):
 if __name__ == "__main__":
 
     transform = torchvision.transforms.Compose([
-        torchvision.transforms.Resize((300, 300))
+        torchvision.transforms.Resize((256, 256))
     ])
 
     train_dataset = ColorDataset(root='D:\Data\dogs-vs-cats', subset='test', transform=transform)
