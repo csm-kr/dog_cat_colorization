@@ -17,6 +17,8 @@ And it is an good example supervised learning and tutorial.
 
 - U-net
 
+- Simple Encoder-Decoder Network
+
 ### loss
 
 - L2 loss
@@ -27,7 +29,7 @@ And it is an good example supervised learning and tutorial.
 
 - learning rate : 1e-3
 
-- adam
+- adam optimizer
 
 ### test
 

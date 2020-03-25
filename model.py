@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from collections import OrderedDict
 
 
 # 각 layer initialization
@@ -132,10 +133,80 @@ class UNet(nn.Module):
         return out
 
 
+class EDNet(nn.Module):
+    def __init__(self):
+        super(EDNet, self).__init__()
+        self.encoder = nn.Sequential(OrderedDict(
+            [
+            ('conv1', nn.Sequential(nn.Conv2d(1, 64, 3, 2, 1),
+                                    # outsize : (112, 112, 64)
+                                    nn.ReLU(),)),
+            ('conv2', nn.Sequential(nn.Conv2d(64, 128, 3, 1, 1),
+                                    # outsize : (112, 112, 128)
+                                    nn.ReLU(),)),
+            ('conv3', nn.Sequential(nn.Conv2d(128, 128, 3, 2, 1),
+                                    # outsize : (56, 56, 128)
+                                    nn.ReLU(),)),
+            ('conv4', nn.Sequential(nn.Conv2d(128, 256, 3, 1, 1),
+                                    # outsize : (56, 56, 256)
+                                    nn.ReLU(),)),
+            ('conv5', nn.Sequential(nn.Conv2d(256, 256, 3, 2, 1),
+                                    # outsize : (28, 28, 256)
+                                    nn.ReLU(),)),
+            ('conv6', nn.Sequential(nn.Conv2d(256, 512, 3, 1, 1),
+                                    # outsize : (28, 28, 512)
+                                    nn.ReLU(),)),
+        ]
+        ))
+
+        self.decoder = nn.Sequential(OrderedDict([
+            ('deconv1', nn.Sequential(
+                # channel 만 줄일 때
+                nn.ConvTranspose2d(512, 256, 3, 1, 1),
+                # outsize : (28, 28, 256)
+                nn.ReLU(),)),
+            ('deconv2', nn.Sequential(
+                # channel 만 줄일 때
+                nn.ConvTranspose2d(256, 256, 3, 2, 1, 1),
+                # outsize : (56, 56, 256)
+                nn.ReLU(),)),
+            ('deconv3', nn.Sequential(
+                # channel 만 줄일 때
+                nn.ConvTranspose2d(256, 128, 3, 1, 1),
+                # outsize : (56, 56, 128)
+                nn.ReLU(),)),
+            ('deconv4', nn.Sequential(
+                # channel 만 줄일 때
+                nn.ConvTranspose2d(128, 128, 3, 2, 1, 1),
+                # outsize : (112, 112, 128)
+                nn.ReLU(),)),
+            ('deconv5', nn.Sequential(
+                # channel 만 줄일 때
+                nn.ConvTranspose2d(128, 64, 3, 1, 1),
+                # outsize : (112, 112, 64)
+                nn.ReLU(),)),
+            ('deconv6', nn.Sequential(
+                # channel 만 줄일 때
+                nn.ConvTranspose2d(64, 2, 3, 2, 1, 1),
+                # outsize : (224, 224, 2)
+                )),
+        ]))
+        self.apply(weights_init)
+
+    def forward(self, x):
+        x = self.encoder(x)
+        x = self.decoder(x)
+        return x
+
+
 if __name__ == "__main__":
     x = torch.rand([10, 1, 256, 256]).cuda()
-    net = UNet().cuda()
-    print(net.forward(x).size())  # x5 is 32, 32
+
+    # net = UNet().cuda()
+    # print(net.forward(x).size())  # x5 is 32, 32
+
+    model = EDNet().cuda()
+    print(model.forward(x).size())  # x5 is 32, 32
 
 
 

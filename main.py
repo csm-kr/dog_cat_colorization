@@ -4,7 +4,7 @@ import visdom
 from dataset import ColorDataset
 import torchvision
 from torch.utils.data import DataLoader
-from model import UNet
+from model import UNet, EDNet
 import torch.nn as nn
 import torch.optim as optim
 from train import train
@@ -13,13 +13,12 @@ from train import train
 if __name__ == "__main__":
     # 1. parser 설정하기
     parser = argparse.ArgumentParser()
-    parser.add_argument('--epoch', type=int, default=100)
-    parser.add_argument('--batch_size', type=int, default=8)
-    parser.add_argument('--lr', type=float, default=0.0001)
+    parser.add_argument('--epoch', type=int, default=200)
+    parser.add_argument('--batch_size', type=int, default=64)
+    parser.add_argument('--lr', type=float, default=0.001)
     parser.add_argument('--save_path', type=str, default='./saves')
-    parser.add_argument('--save_file_name', type=str, default='color')
-    parser.add_argument('--train_path', type=str, default='./data/train')
-    parser.add_argument('--test_path', type=str, default='./data/test')
+    parser.add_argument('--save_file_name', type=str, default='ednet')
+
     opts = parser.parse_args()
     print(opts)
 
@@ -34,20 +33,20 @@ if __name__ == "__main__":
         torchvision.transforms.Resize((256, 256))
     ])
 
-    train_set = ColorDataset(root='D:\Data\dogs-vs-cats', subset='train', transform=transform)
-    test_set = ColorDataset(subset='test', transform=transform)
+    train_set = ColorDataset(root='D:\Data\VOC_ROOT\TEST\VOC2007\JPEGImages', subset='train', transform=transform)
+    # test_set = ColorDataset(subset='test', transform=transform)
 
     # 5. data loader
     train_loader = DataLoader(dataset=train_set,
                               batch_size=opts.batch_size,
                               shuffle=True)
 
-    test_loader = DataLoader(dataset=test_set,
-                             batch_size=opts.batch_size,
-                             shuffle=True)
+    # test_loader = DataLoader(dataset=test_set,
+    #                          batch_size=opts.batch_size,
+    #                          shuffle=True)
 
     # 6. model
-    model = UNet().to(device)
+    model = EDNet().to(device)
 
     # 7. criterion
     criterion = nn.MSELoss()

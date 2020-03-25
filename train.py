@@ -41,7 +41,7 @@ def train(epoch, device, vis, data_loader, model, criterion, optimizer, save_pat
                            legend=['Loss'])
                  )
 
-        if idx % 1 == 0:
+        if idx % 10 == 0:
             print('Epoch: [{0}]\t'
                   'Step: [{1}/{2}]\t'
                   'Loss: {loss:.4f}\t'

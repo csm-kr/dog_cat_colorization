@@ -23,12 +23,13 @@ class ColorDataset(Dataset):
         super().__init__()
 
         # subset must be 'train' or 'test'
-        if subset != 'train' and subset != 'test':
-            raise Exception('Wrong input, subset must be train or test')
-        if len(subset) == 4:
-            subset += '1'
-
-        self.image_path = os.path.join(root, subset)
+        # if subset != 'train' and subset != 'test':
+        #     raise Exception('Wrong input, subset must be train or test')
+        # if len(subset) == 4:
+        #     subset += '1'
+        #
+        # self.image_path = os.path.join(root, subset)
+        self.image_path = root
         self.image_name = glob.glob(os.path.join(self.image_path, '*.jpg'))
         self.transform = transform
 
@@ -76,7 +77,7 @@ if __name__ == "__main__":
         torchvision.transforms.Resize((256, 256))
     ])
 
-    train_dataset = ColorDataset(root='D:\Data\dogs-vs-cats', subset='test', transform=transform)
+    train_dataset = ColorDataset(root='D:\Data\VOC_ROOT\TEST\VOC2007\JPEGImages', subset='test', transform=transform)
 
     for i in train_dataset:
         print(i)
