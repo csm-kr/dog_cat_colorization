@@ -10,7 +10,7 @@ import cv2
 import torchvision
 
 
-visualization = True
+visualization = False
 
 
 class ColorDataset(Dataset):
@@ -36,7 +36,7 @@ class ColorDataset(Dataset):
         # image load
         image = Image.open(self.image_name[idx])
 
-        if transform is not None:
+        if self.transform is not None:
             image = self.transform(image)
 
         # rgb to lab

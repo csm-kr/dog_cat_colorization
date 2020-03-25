@@ -23,11 +23,11 @@ And it is an good example supervised learning and tutorial.
 
 ### train
 
-- epoch : 
+- epoch : 100
 
-- learning rate : 
+- learning rate : 1e-3
 
-- 
+- adam
 
 ### test
 

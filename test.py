@@ -1,7 +1,6 @@
 import torch
 import torchvision.transforms as transforms
 import torch.utils.data as data
-import loader
 import net as network
 from skimage import color
 import numpy as np
