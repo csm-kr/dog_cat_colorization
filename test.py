@@ -3,7 +3,7 @@ import torchvision.transforms as transforms
 from dataset import ColorDataset
 import visdom
 from torch.utils.data import DataLoader
-from model import EDNet
+from model import EDNet, UNet
 
 from skimage import color
 import numpy as np
@@ -24,7 +24,7 @@ def test(epoch, device, vis, data_loader, model, criterion, save_path, save_file
     with torch.no_grad():
 
         tic = time.time()
-        print('Epoch : {}'.format(epoch + 1))
+        print('Epoch : {}'.format(epoch))
 
         for idx, (images, labels) in enumerate(data_loader):
 
@@ -69,9 +69,9 @@ def test(epoch, device, vis, data_loader, model, criterion, save_path, save_file
 
 if __name__ == "__main__":
 
-    epoch = 180   # FIXME
+    epoch = 170   # FIXME
     save_path = './saves'
-    save_file_name = 'ednet'
+    save_file_name = 'unet'
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     vis = visdom.Visdom()
@@ -88,7 +88,7 @@ if __name__ == "__main__":
 
     criterion = torch.nn.MSELoss()
 
-    model = EDNet().to(device)
+    model = UNet().to(device)
     test(epoch, device, vis, test_loader, model, criterion, save_path, save_file_name)
 
 

@@ -8,16 +8,17 @@ from model import UNet, EDNet
 import torch.nn as nn
 import torch.optim as optim
 from train import train
+from torch.optim.lr_scheduler import StepLR
 
 
 if __name__ == "__main__":
     # 1. parser 설정하기
     parser = argparse.ArgumentParser()
     parser.add_argument('--epoch', type=int, default=200)
-    parser.add_argument('--batch_size', type=int, default=64)
+    parser.add_argument('--batch_size', type=int, default=16)
     parser.add_argument('--lr', type=float, default=0.001)
     parser.add_argument('--save_path', type=str, default='./saves')
-    parser.add_argument('--save_file_name', type=str, default='ednet')
+    parser.add_argument('--save_file_name', type=str, default='unet')
 
     opts = parser.parse_args()
     print(opts)
@@ -33,7 +34,7 @@ if __name__ == "__main__":
         torchvision.transforms.Resize((256, 256))
     ])
 
-    train_set = ColorDataset(root='D:\Data\VOC_ROOT\TEST\VOC2007\JPEGImages', subset='train', transform=transform)
+    train_set = ColorDataset(root='D:\Data\VOC_ROOT\TRAIN\VOC2007\JPEGImages', subset='train', transform=transform)
     # test_set = ColorDataset(subset='test', transform=transform)
 
     # 5. data loader
@@ -46,7 +47,7 @@ if __name__ == "__main__":
     #                          shuffle=True)
 
     # 6. model
-    model = EDNet().to(device)
+    model = UNet().to(device)
 
     # 7. criterion
     criterion = nn.MSELoss()
@@ -56,26 +57,24 @@ if __name__ == "__main__":
                            lr=opts.lr,
                            weight_decay=1e-5)
 
-    print(optimizer.state_dict())
-
+    scheduler = StepLR(optimizer=optimizer, step_size=50, gamma=0.1)
     # ----------------- for ------------------
 
-    # for epoch in range(opts.epoch):
-    #     # 9. train
-    #     train(epoch=epoch,
-    #           device=device,
-    #           vis=vis,
-    #           data_loader=train_loader,
-    #           model=model,
-    #           criterion=criterion,
-    #           optimizer=optimizer,
-    #           save_path=opts.save_path,
-    #           save_file_name=opts.save_file_name)
+    for epoch in range(opts.epoch):
+        # 9. train
+        train(epoch=epoch,
+              device=device,
+              vis=vis,
+              data_loader=train_loader,
+              model=model,
+              criterion=criterion,
+              optimizer=optimizer,
+              save_path=opts.save_path,
+              save_file_name=opts.save_file_name)
 
+        scheduler.step()
         # 10. test
         # test
-
-    # te.test(opts=opts)
 
     # ---------------------- review ----------------------
     # 1. argparse

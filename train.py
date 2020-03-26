@@ -7,7 +7,7 @@ def train(epoch, device, vis, data_loader, model, criterion, optimizer, save_pat
 
     model.train()
     tic = time.time()
-    print('Epoch : {}'.format(epoch + 1))
+    print('Epoch : {}'.format(epoch))
 
     for idx, (images, labels) in enumerate(data_loader):
 
@@ -47,7 +47,8 @@ def train(epoch, device, vis, data_loader, model, criterion, optimizer, save_pat
                   'Loss: {loss:.4f}\t'
                   'learning rate: {lr:.7f} s \t'
                   'Time: {time:.4f} s \t'
-                  .format(epoch + 1, idx, len(data_loader),
+                  .format(epoch,
+                          idx, len(data_loader),
                           loss=loss.item(),
                           lr=lr,
                           time=toc))
@@ -55,7 +56,7 @@ def train(epoch, device, vis, data_loader, model, criterion, optimizer, save_pat
 
     if not os.path.exists(save_path):
         os.mkdir(save_path)
-    torch.save(model.state_dict(), os.path.join(save_path, save_file_name + '.{}.pth'.format(epoch + 1)))
+    torch.save(model.state_dict(), os.path.join(save_path, save_file_name + '.{}.pth'.format(epoch)))
 
 
 
