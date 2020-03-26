@@ -56,19 +56,21 @@ if __name__ == "__main__":
                            lr=opts.lr,
                            weight_decay=1e-5)
 
+    print(optimizer.state_dict())
+
     # ----------------- for ------------------
 
-    for epoch in range(opts.epoch):
-        # 9. train
-        train(epoch=epoch,
-              device=device,
-              vis=vis,
-              data_loader=train_loader,
-              model=model,
-              criterion=criterion,
-              optimizer=optimizer,
-              save_path=opts.save_path,
-              save_file_name=opts.save_file_name)
+    # for epoch in range(opts.epoch):
+    #     # 9. train
+    #     train(epoch=epoch,
+    #           device=device,
+    #           vis=vis,
+    #           data_loader=train_loader,
+    #           model=model,
+    #           criterion=criterion,
+    #           optimizer=optimizer,
+    #           save_path=opts.save_path,
+    #           save_file_name=opts.save_file_name)
 
         # 10. test
         # test
