@@ -23,9 +23,9 @@ And it is an good example supervised learning and tutorial.
 
 ### model
 
-- U-net
-
 - Simple Encoder-Decoder Network
+
+
 
 ### loss
 
@@ -38,6 +38,11 @@ And it is an good example supervised learning and tutorial.
 - learning rate : 1e-3
 
 - adam optimizer
+
+- loss plot
+
+![colorization loss](https://user-images.githubusercontent.com/18729104/77840958-bd810000-71c7-11ea-8420-723d3473b457.JPG)
+
 
 ### test
 
