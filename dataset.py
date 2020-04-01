@@ -10,7 +10,7 @@ import cv2
 import torchvision.transforms as transforms
 
 
-visualization = True
+visualization = False
 
 
 class ColorDataset(Dataset):
@@ -23,14 +23,17 @@ class ColorDataset(Dataset):
         super().__init__()
 
         # subset must be 'train' or 'test'
-        # if subset != 'train' and subset != 'test':
-        #     raise Exception('Wrong input, subset must be train or test')
-        # if len(subset) == 4:
-        #     subset += '1'
-        #
-        # self.image_path = os.path.join(root, subset)
-        self.image_path = root
+        assert subset in {'train', 'test'}
+        if len(subset) == 4:
+            subset += '1'
+
+        self.image_path = os.path.join(root, subset)
         self.image_name = glob.glob(os.path.join(self.image_path, '*.jpg'))
+
+        # for voc
+        # self.image_path = root
+        # self.image_name = glob.glob(os.path.join(self.image_path, '*.jpg'))
+
         self.transform = transform
 
     def __getitem__(self, idx):
@@ -69,11 +72,9 @@ class ColorDataset(Dataset):
         img_gray = img_gray.transpose((2, 0, 1))    # 1, h, w
         img_ab = img_ab.transpose((2, 0, 1))  # 2, h, w
 
-        # .type(torch.FloatTensor) 을 해주지 않으면 torch.DoubleTensor 라서 오류가 납니다. :) <-- 어디서?
-        # img_gray = torch.from_numpy(img_gray).type(torch.FloatTensor)
-        # img_ab = torch.from_numpy(img_ab).type(torch.FloatTensor)
-        img_gray = torch.from_numpy(img_gray)
-        img_ab = torch.from_numpy(img_ab)
+        # .type(torch.FloatTensor) 을 해주지 않으면 torch.DoubleTensor 라서 오류가 납니다. :) <-- pytorch conv 의 weight 가
+        img_gray = torch.from_numpy(img_gray).type(torch.FloatTensor)
+        img_ab = torch.from_numpy(img_ab).type(torch.FloatTensor)
 
         return img_gray, img_ab
 
@@ -85,11 +86,11 @@ class ColorDataset(Dataset):
 if __name__ == "__main__":
 
     transform = transforms.Compose([
-        transforms.Resize((256, 256)),
-        # transforms.RandomCrop(224),
+        transforms.Resize((300, 300)),
+        transforms.RandomCrop(256),
     ])
 
-    train_dataset = ColorDataset(root='D:\Data\VOC_ROOT\TEST\VOC2007\JPEGImages', subset='test', transform=transform)
+    train_dataset = ColorDataset(root='D:\Data\dogs-vs-cats', subset='test', transform=transform)
 
     for i, (g, ab) in enumerate(train_dataset):
         print(i)

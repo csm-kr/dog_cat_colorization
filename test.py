@@ -54,24 +54,41 @@ def test(epoch, device, vis, data_loader, model, criterion, save_path, save_file
             outputs = outputs.transpose((1, 2, 0))
             colored_img = colored_img.transpose((1, 2, 0))
 
-            # 3 channel 의 lab 이미지로 변환
-            color_img = np.concatenate((images, outputs), axis=-1)
-            origin_img = np.concatenate((images, colored_img), axis=-1)
+            # lab to rgb
+            img_gray_vis = images * 100
+            img_ab_vis = outputs * 255 - 128
+            label = colored_img * 255 - 128
 
-            color_img = color.lab2rgb(color_img).astype(np.float32)[..., ::-1]
-            origin_img = color.lab2rgb(origin_img).astype(np.float32)[..., ::-1]
+            color_img = np.concatenate((img_gray_vis, img_ab_vis), axis=-1)
+            color_img = color.lab2rgb(color_img)  # rgb
 
-            cv2.imshow('color_img', color_img)
-            cv2.imshow('origin_img', origin_img)
+            label_img = np.concatenate((img_gray_vis, label), axis=-1)
+            label_img = color.lab2rgb(label_img)  # rgb
+
+            cv2.imshow('output', color_img[..., ::-1])
+            cv2.imshow('input', images)
+            cv2.imshow('origin_img', label_img[..., ::-1])
+
             cv2.waitKey(0)
+
+            # 3 channel 의 lab 이미지로 변환
+            # color_img = np.concatenate((images, outputs), axis=-1)
+            # origin_img = np.concatenate((images, colored_img), axis=-1)
+            #
+            # color_img = color.lab2rgb(color_img).astype(np.float32)[..., ::-1]
+            # origin_img = color.lab2rgb(origin_img).astype(np.float32)[..., ::-1]
+            #
+            # cv2.imshow('color_img', color_img)
+            # cv2.imshow('origin_img', origin_img)
+            # cv2.waitKey(0)
             # ----- print -----
 
 
 if __name__ == "__main__":
 
-    epoch = 170   # FIXME
+    epoch = 5   # FIXME
     save_path = './saves'
-    save_file_name = 'unet'
+    save_file_name = 'ednet2'
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     vis = visdom.Visdom()
@@ -81,14 +98,14 @@ if __name__ == "__main__":
         transforms.Resize((256, 256))
     ])
 
-    train_set = ColorDataset(root='D:\Data\VOC_ROOT\TEST\VOC2007\JPEGImages', subset='train', transform=transform)
+    train_set = ColorDataset(root='D:\Data\dogs-vs-cats', subset='test', transform=transform)
     test_loader = DataLoader(dataset=train_set,
                              batch_size=2,
                              shuffle=False)
 
     criterion = torch.nn.MSELoss()
 
-    model = UNet().to(device)
+    model = EDNet().to(device)
     test(epoch, device, vis, test_loader, model, criterion, save_path, save_file_name)
 
 
