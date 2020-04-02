@@ -86,9 +86,9 @@ def test(epoch, device, vis, data_loader, model, criterion, save_path, save_file
 
 if __name__ == "__main__":
 
-    epoch = 5   # FIXME
+    epoch = 0   # FIXME
     save_path = './saves'
-    save_file_name = 'ednet2'
+    save_file_name = 'unet3'
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     vis = visdom.Visdom()
@@ -105,7 +105,7 @@ if __name__ == "__main__":
 
     criterion = torch.nn.MSELoss()
 
-    model = EDNet().to(device)
+    model = UNet().to(device)
     test(epoch, device, vis, test_loader, model, criterion, save_path, save_file_name)
 
 

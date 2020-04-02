@@ -2,7 +2,7 @@ import argparse
 import torch
 import visdom
 from dataset import ColorDataset
-import torchvision
+import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from model import UNet, EDNet
 import torch.nn as nn
@@ -14,11 +14,11 @@ from torch.optim.lr_scheduler import StepLR
 if __name__ == "__main__":
     # 1. parser 설정하기
     parser = argparse.ArgumentParser()
-    parser.add_argument('--epoch', type=int, default=200)
+    parser.add_argument('--epoch', type=int, default=100)
     parser.add_argument('--batch_size', type=int, default=16)
-    parser.add_argument('--lr', type=float, default=0.001)
+    parser.add_argument('--lr', type=float, default=1e-5)
     parser.add_argument('--save_path', type=str, default='./saves')
-    parser.add_argument('--save_file_name', type=str, default='unet')
+    parser.add_argument('--save_file_name', type=str, default='unet3')
 
     opts = parser.parse_args()
     print(opts)
@@ -30,12 +30,12 @@ if __name__ == "__main__":
     vis = visdom.Visdom()
 
     # 4. data set
-    transform = torchvision.transforms.Compose([
-        torchvision.transforms.Resize((256, 256))
+    transform = transforms.Compose([
+        transforms.Resize((300, 300)),
+        transforms.RandomCrop(256),
     ])
-
-    train_set = ColorDataset(root='D:\Data\VOC_ROOT\TRAIN\VOC2007\JPEGImages', subset='train', transform=transform)
-    # test_set = ColorDataset(subset='test', transform=transform)
+    train_set = ColorDataset(root='D:\Data\dogs-vs-cats', subset='train', transform=transform)
+    test_set = ColorDataset(subset='test', transform=transform)
 
     # 5. data loader
     train_loader = DataLoader(dataset=train_set,
