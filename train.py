@@ -43,6 +43,7 @@ def train(epoch, device, vis, data_loader, model, criterion, optimizer, save_pat
                            legend=['Loss'])
                  )
 
+        # -------------------------------- visdom image  --------------------------------
         # visdom image plotting
         vis_gray_img = images[0].cpu().numpy()  # [1, H, W]
         vis_ab_img = labels[0].cpu().numpy()  # [2, H, W]
@@ -63,6 +64,8 @@ def train(epoch, device, vis, data_loader, model, criterion, optimizer, save_pat
         color_img = np.concatenate((vis_gray_img_, vis_ab_img), axis=-1)
         origin_img = color.lab2rgb(color_img)  # rgb
 
+        # images is weird at first some iterations.
+        # so make warning
         label_img = np.concatenate((vis_gray_img_, vis_out_img), axis=-1)
         pred_img = color.lab2rgb(label_img)  # rgb
 
