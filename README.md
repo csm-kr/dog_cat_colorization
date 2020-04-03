@@ -1,4 +1,4 @@
-# Dog Cat colorization 
+# dog cat colorization 
 
 The goal of this project is to convert original gray scale dog or cat images to 
 colorful vivid images.
@@ -50,3 +50,17 @@ And it is an good example supervised learning and tutorial.
 
 ### test
 
+
+## simple guide
+
+### Setting 
+
+- visdom
+
+- python 3.5 >=
+
+- pytorch 1.1.0
+
+- scikit-image
+
+### 
