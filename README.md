@@ -23,26 +23,30 @@ And it is an good example supervised learning and tutorial.
 
 ### model
 
-- Simple Encoder-Decoder Network
+- Simple custom U Network
 
+![networks](https://user-images.githubusercontent.com/18729104/78328008-129e8680-75b9-11ea-9c7d-4283f26ab977.jpg)
 
 
 ### loss
 
-- L2 loss
+- L2 loss 
 
 ### train
 
 - epoch : 100
 
-- learning rate : 1e-3
+- learning rate : 1e-5
 
-- adam optimizer
+- optimizer : adam
+
+- weight_decay : 1e-5
+
+- batch_size : 16
 
 - loss plot
 
 ![colorization loss](https://user-images.githubusercontent.com/18729104/77840958-bd810000-71c7-11ea-8420-723d3473b457.JPG)
-
 
 ### test
 
