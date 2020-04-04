@@ -50,6 +50,7 @@ And it is an good example supervised learning and tutorial.
 
 ### test
 
+- test images
 
 ## simple guide
 
@@ -57,9 +58,9 @@ And it is an good example supervised learning and tutorial.
 
 - visdom
 
-- python 3.5 >=
+- python >= 3.5
 
-- pytorch 1.1.0
+- pytorch >= 1.1.0
 
 - scikit-image
 
