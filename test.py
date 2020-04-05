@@ -86,7 +86,7 @@ def test(epoch, device, vis, data_loader, model, criterion, save_path, save_file
 
 if __name__ == "__main__":
 
-    epoch = 0   # FIXME
+    epoch = 99   # FIXME
     save_path = './saves'
     save_file_name = 'unet3'
 

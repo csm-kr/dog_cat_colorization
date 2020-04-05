@@ -46,11 +46,20 @@ And it is an good example supervised learning and tutorial.
 
 - loss plot
 
-![colorization loss](https://user-images.githubusercontent.com/18729104/77840958-bd810000-71c7-11ea-8420-723d3473b457.JPG)
+![loss](https://user-images.githubusercontent.com/18729104/78471203-7d42f400-776a-11ea-8305-967146160497.JPG)
 
 ### test
 
 - test images
+
+following images are each gray scale image and predict image and original image
+
+![test01](https://user-images.githubusercontent.com/18729104/78471287-238ef980-776b-11ea-91a8-0f8f2786f599.JPG)
+![test02](https://user-images.githubusercontent.com/18729104/78471288-24c02680-776b-11ea-8ea4-53b1b0961e49.JPG)
+![test03](https://user-images.githubusercontent.com/18729104/78471291-25f15380-776b-11ea-9b27-cca98309b61a.JPG)
+![test04](https://user-images.githubusercontent.com/18729104/78471292-27228080-776b-11ea-8d73-73be8b673c11.JPG)
+![test05](https://user-images.githubusercontent.com/18729104/78471293-27bb1700-776b-11ea-8c8a-08117886afdb.JPG)
+
 
 ## simple guide
 
