@@ -73,4 +73,7 @@ following images are each gray scale image and predict image and original image
 
 - scikit-image
 
-### 
+### trained weight 
+
+- you can downloads U-net epoch 99 weight at 
+
