@@ -76,4 +76,5 @@ following images are each gray scale image and predict image and original image
 ### trained weight 
 
 - you can downloads U-net epoch 99 weight at 
+https://drive.google.com/open?id=1dOR2i34aRIy7OrzGrZmgn9Kunef-Q3Lx
 
