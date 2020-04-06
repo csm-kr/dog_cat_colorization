@@ -5,7 +5,7 @@ colorful vivid images.
 
 And it is an good example supervised learning and tutorial.
 
-## contents
+## Contents
 
 ### dataset 
 
@@ -61,9 +61,9 @@ following images are each gray scale image and predict image and original image
 ![test05](https://user-images.githubusercontent.com/18729104/78471293-27bb1700-776b-11ea-8c8a-08117886afdb.JPG)
 
 
-## simple guide
+## Simple guide
 
-### Setting 
+### setting 
 
 - visdom
 
@@ -73,12 +73,12 @@ following images are each gray scale image and predict image and original image
 
 - scikit-image
 
-### Pre-trained weight 
+### pre-trained weight 
 
 - you can downloads U-net epoch 99 weight at 
 https://drive.google.com/open?id=1dOR2i34aRIy7OrzGrZmgn9Kunef-Q3Lx
 
-### Run about your images
+### run about your images
 
 - first, you download pre-trained model or train yourself and make pth file in ./saves
 
