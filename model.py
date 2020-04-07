@@ -25,7 +25,7 @@ class UNet(nn.Module):
 
         self.x2 = nn.Sequential(nn.MaxPool2d(2),
                                 nn.Conv2d(64, 128, 3, padding=1),
-                                nn.BatchNorm2d(128),
+                                nn.BatchNorm2d(128),gi
                                 nn.ReLU(inplace=True),
                                 nn.Conv2d(128, 128, 3, padding=1),
                                 nn.BatchNorm2d(128),
