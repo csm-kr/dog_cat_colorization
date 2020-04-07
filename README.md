@@ -84,3 +84,6 @@ https://drive.google.com/open?id=1dOR2i34aRIy7OrzGrZmgn9Kunef-Q3Lx
 
 - In draw.py, you can change image_dir that you want to colorize and runs draw.py
 
+### future works
+
+- object known, colorizationS
