@@ -86,4 +86,4 @@ https://drive.google.com/open?id=1dOR2i34aRIy7OrzGrZmgn9Kunef-Q3Lx
 
 ### future works
 
-- object known, colorizationS
+- object aware, colorization.
