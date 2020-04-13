@@ -16,7 +16,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--epoch', type=int, default=100)
     parser.add_argument('--batch_size', type=int, default=16)
-    parser.add_argument('--lr', type=float, default=1e-5)
+    parser.add_argument('--lr', type=float, default=1e-4)
     parser.add_argument('--save_path', type=str, default='./saves')
     parser.add_argument('--save_file_name', type=str, default='unet3')
 
@@ -40,7 +40,9 @@ if __name__ == "__main__":
     # 5. data loader
     train_loader = DataLoader(dataset=train_set,
                               batch_size=opts.batch_size,
-                              shuffle=True)
+                              num_workers=4,
+                              shuffle=True,
+                              pin_memory=True)
 
     # test_loader = DataLoader(dataset=test_set,
     #                          batch_size=opts.batch_size,
